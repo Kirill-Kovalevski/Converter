@@ -13,24 +13,18 @@ type Category =
   | "currency";
 
 type Unit = {
-  key: string;
-  label: string;
+  key: string;       // מפתח פנימי (אנגלית – לא מוצג)
+  label: string;     // תווית מוצגת (עברית)
   factor?: number;
   offset?: number;
   toBase?: (v: number) => number;
   fromBase?: (v: number) => number;
 };
 
-type CategoryDef = {
-  key: Category;
-  label: string;
-  base: string;
-  units: Unit[];
-};
-
+type CategoryDef = { key: Category; label: string; base: string; units: Unit[] };
 type DataMode = "si" | "iec";
 
-/* ===================== Catalog ===================== */
+/* ===================== קטלוג ===================== */
 const STATIC: Omit<CategoryDef, "units">[] = [
   { key: "length", label: "אורך", base: "m" },
   { key: "mass", label: "מסה", base: "kg" },
@@ -43,87 +37,96 @@ const STATIC: Omit<CategoryDef, "units">[] = [
   { key: "currency", label: "מטבע", base: "CUR" },
 ];
 
+// ––– אורך
 const LENGTH: Unit[] = [
-  { key: "mm", label: "מילימטרים", factor: 0.001 },
-  { key: "cm", label: "סנטימטרים", factor: 0.01 },
-  { key: "m", label: "מטרים", factor: 1 },
-  { key: "km", label: "קילומטרים", factor: 1000 },
+  { key: "mm", label: "מ״מ", factor: 0.001 },
+  { key: "cm", label: "ס״מ", factor: 0.01 },
+  { key: "m",  label: "מטר", factor: 1 },
+  { key: "km", label: "ק״מ", factor: 1000 },
   { key: "in", label: "אינץ׳", factor: 0.0254 },
   { key: "ft", label: "פיט", factor: 0.3048 },
   { key: "yd", label: "יארד", factor: 0.9144 },
   { key: "mi", label: "מייל", factor: 1609.344 },
 ];
 
+// ––– מסה
 const MASS: Unit[] = [
   { key: "mg", label: "מ״ג", factor: 1e-6 },
-  { key: "g", label: "גרם", factor: 1e-3 },
+  { key: "g",  label: "גרם", factor: 1e-3 },
   { key: "kg", label: "ק״ג", factor: 1 },
-  { key: "t", label: "טון", factor: 1000 },
+  { key: "t",  label: "טון", factor: 1000 },
   { key: "oz", label: "אונקיה", factor: 0.028349523125 },
   { key: "lb", label: "פאונד", factor: 0.45359237 },
   { key: "st", label: "סטון", factor: 6.35029318 },
 ];
 
+// ––– נפח
 const VOLUME: Unit[] = [
   { key: "ml", label: "מ״ל", factor: 0.001 },
-  { key: "L", label: "ליטר", factor: 1 },
-  { key: "m3", label: "מ׳׳ק", factor: 1000 },
+  { key: "L",  label: "ליטר", factor: 1 },
+  { key: "m3", label: "מ״ק", factor: 1000 },
   { key: "tsp", label: "כפית (US)", factor: 0.00492892159375 },
   { key: "tbsp", label: "כף (US)", factor: 0.01478676478125 },
   { key: "cup", label: "כוס (US)", factor: 0.2365882365 },
-  { key: "pt", label: "פיינט (US)", factor: 0.473176473 },
-  { key: "qt", label: "קוורט (US)", factor: 0.946352946 },
+  { key: "pt",  label: "פיינט (US)", factor: 0.473176473 },
+  { key: "qt",  label: "קוורט (US)", factor: 0.946352946 },
   { key: "gal", label: "גלון (US)", factor: 3.785411784 },
 ];
 
+// ––– מהירות
 const SPEED: Unit[] = [
-  { key: "mps", label: "מ׳/ש׳", factor: 1 },
+  { key: "mps",  label: "מ׳/ש׳", factor: 1 },
   { key: "kmph", label: "קמ״ש", factor: 1000 / 3600 },
-  { key: "mph", label: "מייל/שעה", factor: 1609.344 / 3600 },
+  { key: "mph",  label: "מייל/שעה", factor: 1609.344 / 3600 },
   { key: "knot", label: "קשר", factor: 1852 / 3600 },
 ];
 
+// ––– שטח
 const AREA: Unit[] = [
   { key: "mm2", label: "ממ״ר", factor: 1e-6 },
   { key: "cm2", label: "סמ״ר", factor: 1e-4 },
-  { key: "m2", label: "מ״ר", factor: 1 },
+  { key: "m2",  label: "מ״ר", factor: 1 },
   { key: "km2", label: "קמ״ר", factor: 1e6 },
   { key: "in2", label: "אינץ׳²", factor: 0.00064516 },
   { key: "ft2", label: "פיט²", factor: 0.09290304 },
   { key: "yd2", label: "יארד²", factor: 0.83612736 },
   { key: "acre", label: "אקר", factor: 4046.8564224 },
-  { key: "ha", label: "הקטר", factor: 10000 },
+  { key: "ha",   label: "הקטר", factor: 10000 },
 ];
 
+// ––– טמפרטורה
 const TEMPERATURE: Unit[] = [
-  { key: "C", label: "°C", toBase: (v) => v, fromBase: (v) => v },
-  { key: "F", label: "°F", toBase: (v) => (v - 32) * (5/9), fromBase: (v) => v * 9/5 + 32 },
-  { key: "K", label: "K",  toBase: (v) => v - 273.15,       fromBase: (v) => v + 273.15 },
+  { key: "C", label: "°C (צלזיוס)", toBase: (v) => v, fromBase: (v) => v },
+  { key: "F", label: "°F (פרנהייט)", toBase: (v) => (v - 32) * (5/9), fromBase: (v) => v * 9/5 + 32 },
+  { key: "K", label: "K (קלווין)",  toBase: (v) => v - 273.15,       fromBase: (v) => v + 273.15 },
 ];
 
+// ––– זמן
 const TIME: Unit[] = [
-  { key: "ms", label: "מילישניות", factor: 1e-3 },
-  { key: "s", label: "שניות", factor: 1 },
+  { key: "ms",  label: "מילישניות", factor: 1e-3 },
+  { key: "s",   label: "שניות", factor: 1 },
   { key: "min", label: "דקות", factor: 60 },
-  { key: "h", label: "שעות", factor: 3600 },
-  { key: "d", label: "ימים", factor: 86400 },
-  { key: "wk", label: "שבועות", factor: 604800 },
+  { key: "h",   label: "שעות", factor: 3600 },
+  { key: "d",   label: "ימים", factor: 86400 },
+  { key: "wk",  label: "שבועות", factor: 604800 },
 ];
 
+// ––– מטבעות להצגה
 const CURRENCY_CODES = ["ILS","USD","EUR","GBP","JPY","CNY","CAD","AUD","CHF","SEK","NOK","DKK","INR","BRL","MXN","ZAR","AED","SAR","TRY"];
 
 /* ===================== Helpers ===================== */
 const getCategory = (key: Category, mode: DataMode): CategoryDef => {
   if (key === "data") {
     const k = mode === "si" ? 1000 : 1024;
-    const suffix = mode === "si" ? ["KB","MB","GB","TB","PB"] : ["KiB","MiB","GiB","TiB","PiB"];
+    const suffixKeys = mode === "si" ? ["KB","MB","GB","TB","PB"] : ["KiB","MiB","GiB","TiB","PiB"];
+    const suffixHeb  = mode === "si" ? ["ק״ב","מ״ב","ג״ב","ט״ב","פ״ב"] : ["קי״ב","מי״ב","גי״ב","טי״ב","פי״ב"];
     const units: Unit[] = [
-      { key: "B", label: "Bytes", factor: 1 },
-      { key: suffix[0], label: `${suffix[0]} (${k})`, factor: k ** 1 },
-      { key: suffix[1], label: `${suffix[1]} (${k}²)`, factor: k ** 2 },
-      { key: suffix[2], label: `${suffix[2]} (${k}³)`, factor: k ** 3 },
-      { key: suffix[3], label: `${suffix[3]} (${k}⁴)`, factor: k ** 4 },
-      { key: suffix[4], label: `${suffix[4]} (${k}⁵)`, factor: k ** 5 },
+      { key: "B", label: "בתים", factor: 1 },
+      ...suffixKeys.map((kkey, i) => ({
+        key: kkey,
+        label: `${suffixHeb[i]} (${k}^${i+1})`,
+        factor: k ** (i + 1)
+      })),
     ];
     return { key, label: "נתונים", base: "B", units };
   }
@@ -157,9 +160,10 @@ function formatNumber(n: number) {
     abs !== 0 && (abs < 0.001 || abs >= 1e6)
       ? { notation: "scientific", maximumFractionDigits: 6 }
       : { maximumFractionDigits: 8 };
-  return new Intl.NumberFormat(undefined, opts).format(n);
+  return new Intl.NumberFormat("he-IL", opts).format(n);
 }
 
+// URL state
 function useQueryState<T extends Record<string, string>>(defaults: T) {
   const [state, setState] = useState<T>(() => {
     const url = new URL(window.location.href);
@@ -225,8 +229,15 @@ const Converter: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qs.cfrom, qs.cto, isCurrency]);
 
+  // Toast + ripple
   const [toast, setToast] = useState<string>("");
   const showToast = (t: string) => { setToast(t); setTimeout(() => setToast(""), 1200); };
+  const ripple = (e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget as HTMLElement;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty("--x", `${e.clientX - r.left}px`);
+    el.style.setProperty("--y", `${e.clientY - r.top}px`);
+  };
 
   const swap = () => {
     if (isCurrency) setQs(s => ({ ...s, cfrom: s.cto, cto: s.cfrom }));
@@ -241,23 +252,36 @@ const Converter: React.FC = () => {
     <section className="panel glass">
       <div className="panel-head">
         <h2>המר כל דבר</h2>
-        <p className="muted">עברית · יישור מלא · קישורים ניתנים לשיתוף</p>
+        <p className="muted">יישור נוח, קריא וברור · קישורים ניתנים לשיתוף</p>
       </div>
 
-      {/* Global toggles */}
-      <div className="toggles glass-strong">
-        <div className={`toggle-chip ${dataMode === "si" ? "on":""}`} role="button" tabIndex={0}
-             onClick={() => setDataMode("si")} onKeyDown={e=>e.key==="Enter"&&setDataMode("si")}>
-          נתונים: SI (1000)
+      {/* מתגי נתונים – מוצגים רק בקטגוריית נתונים */}
+      {qs.cat === "data" && (
+        <div className="toggles glass-strong" title="בחר שיטת חישוב: 1000 = SI, 1024 = IEC">
+          <div
+            className={`toggle-chip ${dataMode === "si" ? "on" : ""}`}
+            role="button" tabIndex={0}
+            onClick={() => setDataMode("si")}
+            onKeyDown={(e) => e.key === "Enter" && setDataMode("si")}
+            onMouseDown={ripple}
+          >
+            1000
+          </div>
+          <div
+            className={`toggle-chip ${dataMode === "iec" ? "on" : ""}`}
+            role="button" tabIndex={0}
+            onClick={() => setDataMode("iec")}
+            onKeyDown={(e) => e.key === "Enter" && setDataMode("iec")}
+            onMouseDown={ripple}
+          >
+            1024
+          </div>
         </div>
-        <div className={`toggle-chip ${dataMode === "iec" ? "on":""}`} role="button" tabIndex={0}
-             onClick={() => setDataMode("iec")} onKeyDown={e=>e.key==="Enter"&&setDataMode("iec")}>
-          נתונים: IEC (1024)
-        </div>
-      </div>
+      )}
 
-      <div className="grid">
-        <label className="field">
+      {/* פריסה נוחה */}
+      <div className="grid grid--comfy">
+        <label className="field field--full">
           <span className="label">קטגוריה</span>
           <div className="control">
             <select
@@ -282,7 +306,7 @@ const Converter: React.FC = () => {
           </div>
         </label>
 
-        <label className="field">
+        <label className="field field--full">
           <span className="label">כמות</span>
           <div className="control">
             <input
@@ -301,13 +325,13 @@ const Converter: React.FC = () => {
         <label className="field">
           <span className="label">מ־</span>
           <div className="control">
-            {qs.cat === "currency" ? (
+            {isCurrency ? (
               <select value={qs.cfrom} onChange={(e) => setQs(s => ({ ...s, cfrom: e.target.value }))}>
                 {CURRENCY_CODES.map(code => <option key={code} value={code}>{code}</option>)}
               </select>
             ) : (
               <select value={qs.from} onChange={(e) => setQs(s => ({ ...s, from: e.target.value }))}>
-                {cat.units.map(u => <option key={u.key} value={u.key}>{u.label} ({u.key})</option>)}
+                {cat.units.map(u => <option key={u.key} value={u.key}>{u.label}</option>)}
               </select>
             )}
           </div>
@@ -316,22 +340,45 @@ const Converter: React.FC = () => {
         <label className="field">
           <span className="label">אל</span>
           <div className="control">
-            {qs.cat === "currency" ? (
+            {isCurrency ? (
               <select value={qs.cto} onChange={(e) => setQs(s => ({ ...s, cto: e.target.value }))}>
                 {CURRENCY_CODES.map(code => <option key={code} value={code}>{code}</option>)}
               </select>
             ) : (
               <select value={qs.to} onChange={(e) => setQs(s => ({ ...s, to: e.target.value }))}>
-                {cat.units.map(u => <option key={u.key} value={u.key}>{u.label} ({u.key})</option>)}
+                {cat.units.map(u => <option key={u.key} value={u.key}>{u.label}</option>)}
               </select>
             )}
           </div>
         </label>
       </div>
 
+      <div className="actions-row actions-row--center">
+        <button className="btn primary" onMouseDown={ripple} onClick={swap} aria-label="החלפה">⇅ החלף</button>
+        <button className="btn" onMouseDown={ripple} onClick={() =>
+          copy(`${qs.amount || 0} ${isCurrency ? qs.cfrom : fromUnit.label} = ${formatNumber(result)} ${isCurrency ? qs.cto : toUnit.label}`)
+        }>העתק תוצאה</button>
+        <button className="btn" onMouseDown={ripple} onClick={() => copy(window.location.href)} title="העתקת קישור לממיר">
+          שלח לחבר
+        </button>
+      </div>
+
+      <output className="result glass-strong" aria-live="polite">
+        <div className="result-top">
+          <span className="badge">
+            {isCurrency ? `${qs.cfrom} → ${qs.cto}` : `${fromUnit.label} → ${toUnit.label}`}
+          </span>
+          {isCurrency && <span className="badge alt">שער: {qs.crate || "—"}</span>}
+        </div>
+        <div className="result-main">
+          <div className="big">{formatNumber(result)}</div>
+          <div className="small">תוצאה</div>
+        </div>
+      </output>
+
       {qs.cat === "currency" && (
         <div className="grid grid--currency">
-          <label className="field">
+          <label className="field field--full">
             <span className="label">שער ידני</span>
             <div className="control">
               <div className="rate-box">
@@ -348,32 +395,11 @@ const Converter: React.FC = () => {
                 />
                 <span className="mono">&nbsp;{qs.cto}</span>
               </div>
-              <small className="muted">פרטי ומהיר — ללא API. אנחנו זוכרים שערים לכל זוג מטבעות במכשיר שלך.</small>
+              <small className="muted">פרטי ומהיר — ללא API. זוכר שערים לכל זוג מטבעות.</small>
             </div>
           </label>
         </div>
       )}
-
-      <div className="actions-row">
-        <button className="btn primary" onClick={swap} aria-label="החלפה">⇅ החלף</button>
-        <button className="btn" onClick={() =>
-          copy(`${qs.amount || 0} ${qs.cat === "currency" ? qs.cfrom : fromUnit.key} = ${formatNumber(result)} ${qs.cat === "currency" ? qs.cto : toUnit.key}`)
-        }>העתק תוצאה</button>
-        <button className="btn" onClick={() => copy(window.location.href)} title="קישור עם המצב הנוכחי">שתף קישור</button>
-      </div>
-
-      <output className="result glass-strong" aria-live="polite">
-        <div className="result-top">
-          <span className="badge">
-            {qs.cat === "currency" ? `${qs.cfrom} → ${qs.cto}` : `${fromUnit.key} → ${toUnit.key}`}
-          </span>
-          {qs.cat === "currency" && <span className="badge alt">שער: {qs.crate || "—"}</span>}
-        </div>
-        <div className="result-main">
-          <div className="big">{formatNumber(result)}</div>
-          <div className="small">תוצאה</div>
-        </div>
-      </output>
 
       {qs.cat !== "currency" && (
         <div className="mini-table">
@@ -382,7 +408,7 @@ const Converter: React.FC = () => {
             const v = fromBase(u, base);
             return (
               <div className="mini-row" key={u.key}>
-                <span className="u">{u.key}</span>
+                <span className="u">{u.label}</span>
                 <span className="v">{formatNumber(v)}</span>
               </div>
             );

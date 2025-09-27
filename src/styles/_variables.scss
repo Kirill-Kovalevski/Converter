@@ -1,29 +1,45 @@
 :root {
-  --bg: #0a0f1a;
-  --bg-2: #0f1726;
+  /* Dark (cozy + readable) */
+  --bg: #070a12;
+  --bg-2: #0c1426;
+  --surface: #0e1930;
+  --field: #12213a;
+  --field-contrast: rgba(255,255,255,.18);
   --card: rgba(255,255,255,0.08);
   --card-strong: rgba(255,255,255,0.16);
-  --text: #eef4ff;
-  --muted: #a9b6cf;
-  --accent: #3be4ff;     /* neon aqua */
-  --accent-2: #b27dff;   /* electric lavender */
-  --ring: #00d5ff;
-  --ok: #5af1b1;
-  --shadow: 0 18px 44px rgba(0,0,0,.45);
+  --text: #f2f6ff;
+  --muted: #a5b3cc;
+
+  /* Pastel accent set (with lilac tint) */
+  --accent: #6acbff;        /* sky pastel */
+  --accent-2: #c39cff;      /* lilac pastel */
+  --accent-3: #84ffd9;      /* mint pastel */
+
+  --ring: #6acbff;
+  --ok: #6ef0bb;
+  --shadow: 0 18px 44px rgba(0,0,0,.5);
+  --select-popup: #0c1833;
 }
 
 .theme-light {
-  --bg: #f7f9fe;
+  --bg: #f7f9ff;
   --bg-2: #ffffff;
+  --surface: #ffffff;
+  --field: #eef2ff;
+  --field-contrast: rgba(9,13,23,0.12);
   --card: rgba(9,13,23,0.06);
   --card-strong: rgba(9,13,23,0.12);
   --text: #0b1220;
-  --muted: #475268;
-  --accent: #3a7bff;     /* vibrant cobalt */
-  --accent-2: #7a4dff;   /* royal violet */
-  --ring: #3a7bff;
+  --muted: #4a5872;
+
+  --accent: #5aa5ff;        /* brighter cobalt */
+  --accent-2: #b18dff;      /* soft purple */
+  --accent-3: #53e6c3;      /* mint */
+  --ring: #5aa5ff;
+
   --ok: #12b886;
-  --shadow: 0 14px 30px rgba(0,0,0,.12);
+  --shadow: 0 14px 30px rgba(0,0,0,.10);
+  --select-popup: #ffffff;
 }
 
 $radius-xl: 24px;
@@ -32,14 +48,14 @@ $radius-2xl: 32px;
 @mixin focus-ring {
   outline: none;
   box-shadow:
-    0 0 0 2px rgba(255,255,255,.12),
+    0 0 0 2px rgba(255,255,255,.10),
     0 0 0 4px var(--ring);
 }
 
 @mixin glass($bg: var(--card)) {
   backdrop-filter: blur(18px) saturate(130%);
   background: $bg;
-  border: 1px solid rgba(255,255,255,.18);
+  border: 1px solid var(--field-contrast);
 }
 
 @mixin nice-scroll {

@@ -1,0 +1,53 @@
+:root {
+  --bg: #0a0f1a;
+  --bg-2: #0f1726;
+  --card: rgba(255,255,255,0.08);
+  --card-strong: rgba(255,255,255,0.16);
+  --text: #eef4ff;
+  --muted: #a9b6cf;
+  --accent: #3be4ff;     /* neon aqua */
+  --accent-2: #b27dff;   /* electric lavender */
+  --ring: #00d5ff;
+  --ok: #5af1b1;
+  --shadow: 0 18px 44px rgba(0,0,0,.45);
+}
+
+.theme-light {
+  --bg: #f7f9fe;
+  --bg-2: #ffffff;
+  --card: rgba(9,13,23,0.06);
+  --card-strong: rgba(9,13,23,0.12);
+  --text: #0b1220;
+  --muted: #475268;
+  --accent: #3a7bff;     /* vibrant cobalt */
+  --accent-2: #7a4dff;   /* royal violet */
+  --ring: #3a7bff;
+  --ok: #12b886;
+  --shadow: 0 14px 30px rgba(0,0,0,.12);
+}
+
+$radius-xl: 24px;
+$radius-2xl: 32px;
+
+@mixin focus-ring {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.12),
+    0 0 0 4px var(--ring);
+}
+
+@mixin glass($bg: var(--card)) {
+  backdrop-filter: blur(18px) saturate(130%);
+  background: $bg;
+  border: 1px solid rgba(255,255,255,.18);
+}
+
+@mixin nice-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+  &::-webkit-scrollbar { height: 8px; width: 8px; }
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+  }
+}
